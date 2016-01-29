@@ -2,8 +2,8 @@
 (function () {
     var app = angular.module("app");
 
-    app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$interval', '$q', 'uiGridConstants', 'uiGridGroupingConstants',
-        function ($scope, $http, $timeout, $interval, $q, uiGridConstants, uiGridGroupingConstants) {
+    app.controller('MainCtrl', ['$scope', '$http', '$timeout', '$interval', '$q', 'uiGridConstants', 'uiGridGroupingConstants', 'tokenService',
+        function ($scope, $http, $timeout, $interval, $q, uiGridConstants, uiGridGroupingConstants, tokenService) {
 
             $scope.gridOptions = {};
             $scope.gridOptions.data = 'myData';
@@ -95,11 +95,12 @@
                         return;
                     }
 
-                    if (hasUserLoggedIn() != true) {
+                    if (tokenService.hasUserLoggedIn() != true) {
                         showErrorDialog('Not yet logged in.');
                         return;
                     }
 
+                    var accessToken = tokenService.getToken();
                     $http.put(productApiLink + rowEntity.id, rowEntity, { headers: { "Authorization": "Bearer " + accessToken } })
                         .then(function success(response) {
                             console.log('{"Column":"' + colDef.name + '","ID":"' + rowEntity.id + '","Old Value":"' + oldValue + '","New Value":"' + newValue + '"}');
@@ -112,7 +113,7 @@
 
             // CREATE: submit new product form
             $scope.addProduct = function () {
-                if (hasUserLoggedIn() != true) {
+                if (tokenService.hasUserLoggedIn() != true) {
                     showErrorDialog('Not yet logged in.');
                     return;
                 }
@@ -134,6 +135,7 @@
                     Price: $scope.price ? $scope.price : 0
                 };
 
+                var accessToken = tokenService.getToken();
                 $http.post(productApiLink, product, { headers: { "Authorization": "Bearer " + accessToken } })
                     .then(function success(response) {
                         $scope.myData.push(response);
@@ -149,7 +151,7 @@
 
             // DELETE: delete selected rows
             $scope.deleteSelected = function () {
-                if (hasUserLoggedIn() != true) {
+                if (tokenService.hasUserLoggedIn() != true) {
                     showErrorDialog('Not yet logged in.');
                     return;
                 }
@@ -164,6 +166,7 @@
                 var callbackFunction = function (ok) {
                     if (ok) {
                         var ops = [];
+                        var accessToken = tokenService.getToken();
                         angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
                             ops.push(
                                 $http.delete(productApiLink + data.Id, { headers: {"Authorization" : "Bearer " + accessToken} })
@@ -187,18 +190,20 @@
                 showConfirmDialog('Delete selected ' + selectedLength + ' part number(s)?', callbackFunction);
             };
 
+            // SHOW FORM: will show form provided that user has logged in.
+            $scope.showForm = function () {
+                if (tokenService.hasUserLoggedIn() != true) {
+                    showErrorDialog("Must log in first.");
+                    $scope.willShowForm = false;
+                    return;
+                }
+
+                $scope.willShowForm = !($scope.willShowForm);
+            };
+
             /**************************************
             * PRIVATE FUNCTIONS
             ***************************************/
-
-            // Check if user has logged in.
-            function hasUserLoggedIn() {
-                var accessToken = sessionStorage.getItem("accessToken");
-                if (typeof (accessToken) == 'undefined' || accessToken == null) {
-                    return false;
-                }
-                return true;
-            }
 
             // Hide form and clear fields
             function clearProductForm() {
@@ -242,7 +247,7 @@
             ***************************************/
 
             // Product form state: true = shown, false = not shown
-            $scope.showForm = false;
+            $scope.willShowForm = false;
 
             // Refresh data on page load
             $scope.refreshData();

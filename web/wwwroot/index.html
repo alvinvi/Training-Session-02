@@ -15,6 +15,7 @@
     <script src="Content/scripts/bootstrap.js"></script>
     <script src="Content/scripts/bootstrap-dialog.min.js"></script>
     <script src="app.js"></script>
+    <script src="tokenService.js"></script>
     <script src="mainCtrl.js"></script>
     <script src="loginCtrl.js"></script>
     <link rel="stylesheet" type="text/css" href="Content/css/main.css">
@@ -24,22 +25,24 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="../">Products</a>
+    <div ng-controller="LoginCtrl" class="container">
+        <div class="container container-fluid navbar navbar-default">
+            <div class="pull-left">
+                <a class="navbar-brand" href="../">Products</a>&nbsp;&nbsp;
+            </div>
+            <div class="pull-right">
+                <button ng-show="hasUserLoggedIn != true" class="btn btn-primary" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-log-in"></span> Login</button>
+                <button ng-show="hasUserLoggedIn" ng-click="logOut()" class="btn btn-primary"><span class="glyphicon glyphicon-log-out"></span> Log Out</button>
             </div>
         </div>
-    </nav>
-    
-    <div ng-controller="LoginCtrl" class="container">
+
         <div class="col-xs-12">
             <div class="row">
                 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog">
                         <div class="loginmodal-container">
                             <h1>Login to Your Account</h1><br>
-                            <form ng-submit="login()" id="loginForm" name="loginForm">
+                            <form ng-submit="logIn()" id="loginForm" name="loginForm">
                                 <input type="text" name="user" placeholder="Username" ng-model="loginData.username">
                                 <input type="password" name="pass" placeholder="Password" ng-model="loginData.password">
                                 <input type="submit" name="login" class="login loginmodal-submit" value="Login">
@@ -58,10 +61,8 @@
     <div ng-controller="MainCtrl" class="container">
         <div class="col-xs-12">
             <div class="row">
-                <button ng-click="showForm=!showForm" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> New Product</button>
-                <button ng-show="hasUserLoggedIn() != true" class="btn btn-primary" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-log-in"></span> Login</button>
-                <button ng-show="hasUserLoggedIn()" class="btn btn-primary"><span class="glyphicon glyphicon-log-out"></span> Log Out</button>
-                <form ng-show="showForm" ng-submit="addProduct()" name="productForm">
+                <button ng-click="showForm()" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> New Product</button>
+                <form ng-show="willShowForm" ng-submit="addProduct()" name="productForm">
 
                     <div class="panel panel-primary">
                         <!-- <div class="panel-heading"><h3 class="panel-title">New Product</h3></div> -->
