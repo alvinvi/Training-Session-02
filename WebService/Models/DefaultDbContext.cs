@@ -27,6 +27,10 @@ namespace WebService.Models
             modelBuilder.Entity<Product>()
                 .Property(e => e.Price)
                 .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Product>()
+                .Property(e => e.Category)
+                .IsUnicode(false);
         }
     }
 }

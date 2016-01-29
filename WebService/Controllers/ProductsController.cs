@@ -54,6 +54,7 @@ namespace WebService.Controllers
 
                 product.PartNumber = updated.PartNumber;
                 product.PartDescription = updated.PartDescription;
+                product.Category = updated.Category;
                 product.Price = updated.Price;
 
                 context.Entry<Product>(product).State = System.Data.Entity.EntityState.Modified;

@@ -1,22 +1,24 @@
-<!doctype html>
+﻿<!doctype html>
 <html ng-app="app">
 
 <head>
     <meta charset="UTF-8">
     <title>Products</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-touch.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
-    <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="Content/scripts/angularjs/angular.min.js"></script>
+    <script src="Content/scripts/angularjs/angular-touch.min.js"></script>
+    <script src="Content/scripts/angularjs/angular-animate.min.js"></script>
+    <script src="Content/scripts/csv.js"></script>
+    <script src="Content/scripts/pdfmake.js"></script>
+    <script src="Content/scripts/vfs_fonts.js"></script>
+    <script src="Content/scripts/jquery-2.2.0.min.js"></script>
     <script src="Content/scripts/ui-grid.js"></script>
     <script src="Content/scripts/bootstrap.js"></script>
     <script src="Content/scripts/bootstrap-dialog.min.js"></script>
     <script src="app.js"></script>
-    <link rel="stylesheet" type="text/css" href="Content/css/ui-grid.css">
+    <script src="mainCtrl.js"></script>
+    <script src="loginCtrl.js"></script>
     <link rel="stylesheet" type="text/css" href="Content/css/main.css">
+    <link rel="stylesheet" type="text/css" href="Content/css/ui-grid.css">
     <link rel="stylesheet" type="text/css" href="Content/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="Content/css/bootstrap-dialog.min.css">
 </head>
@@ -29,10 +31,36 @@
             </div>
         </div>
     </nav>
+    
+    <div ng-controller="LoginCtrl" class="container">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog">
+                        <div class="loginmodal-container">
+                            <h1>Login to Your Account</h1><br>
+                            <form ng-submit="login()" id="loginForm" name="loginForm">
+                                <input type="text" name="user" placeholder="Username" ng-model="loginData.username">
+                                <input type="password" name="pass" placeholder="Password" ng-model="loginData.password">
+                                <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                            </form>
+
+                            <div class="login-help">
+                                <a href="#">Register</a> - <a href="#">Forgot Password</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div ng-controller="MainCtrl" class="container">
         <div class="col-xs-12">
             <div class="row">
-                <button ng-click="showForm=!showForm" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>New Product</button>
+                <button ng-click="showForm=!showForm" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> New Product</button>
+                <button ng-show="hasUserLoggedIn() != true" class="btn btn-primary" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-log-in"></span> Login</button>
+                <button ng-show="hasUserLoggedIn()" class="btn btn-primary"><span class="glyphicon glyphicon-log-out"></span> Log Out</button>
                 <form ng-show="showForm" ng-submit="addProduct()" name="productForm">
 
                     <div class="panel panel-primary">
@@ -80,9 +108,9 @@
             </div>
         </div>
     </div>
+    <footer class="container">
+        <p>&copy; 2016 - RBML</p>
+    </footer>
 </body>
-<footer class="container">
-    <p>&copy; 2016 - RBML</p>
-</footer>
 
 </html>
