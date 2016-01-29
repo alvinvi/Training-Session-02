@@ -4,11 +4,16 @@
     var app = angular.module("app");
     app.controller("LoginCtrl", ['$scope', '$http', 'tokenService',
         function ($scope, $http, tokenService) {
+
+            // Model
+
             $scope.loginData = {
                 username: "alvin@sample.com",
                 password: "P@ssw0rd_100"
             };
             $scope.hasUserLoggedIn = tokenService.hasUserLoggedIn();
+
+            // Controller methods
 
             $scope.logIn = function () {
                 var loginData = $scope.loginData;
@@ -20,6 +25,7 @@
                         tokenService.setToken(response.data.access_token);
                         BootstrapDialog.show({ title: "Login success", message: "Welcome, " + loginData.username, type: BootstrapDialog.TYPE_SUCCESS });
                         $scope.hasUserLoggedIn = true;
+                        $("#productForm").modal('hide');
                     }, function error(response) {
                         BootstrapDialog.show({ title: "Error", message: "Unable to login.", type: BootstrapDialog.TYPE_DANGER });
                     });
