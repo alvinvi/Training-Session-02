@@ -8,7 +8,7 @@ namespace WebService.Models
     public partial class DefaultDbContext : DbContext
     {
         public DefaultDbContext()
-            : base("name=DefaultContextModel")
+            : base("name=DefaultConnection")
         {
         }
 
